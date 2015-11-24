@@ -31,20 +31,20 @@ class m151124_012204_create_all_tables extends Migration
             'name' => $this->string(40)->notNull(),
             'lat' => $this->double(10),
             'long' => $this->double(10),
-            'commerce_id' => $this->integer(11),
-            'enable' => $this->boolean(),
+            'commerce_id' => $this->integer(11)->notNull(),
+            'enable' => $this->boolean()->notNull(),
         ]);
 
         $this->createTable('route', [
             'id' => $this->primaryKey(),            
-            'employee_id' => $this->integer(11),
+            'employee_id' => $this->integer(11)->notNull(),
         ]);
 
         $this->createTable('order', [
             'id' => $this->primaryKey(),
-            'quantity' => $this->integer(10),            
-            'commerce_id' => $this->integer(11),
-            'product_id' => $this->integer(11),            
+            'quantity' => $this->integer(10)->notNull(),            
+            'commerce_id' => $this->integer(11)->notNull(),
+            'product_id' => $this->integer(11)->notNull(),            
         ]);
 
         $this->createTable('commerce_product', [                        

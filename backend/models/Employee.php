@@ -33,7 +33,7 @@ class Employee extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name'], 'required'],
+            [['name', 'commerce_id', 'enable'], 'required'],
             [['lat', 'long'], 'number'],
             [['commerce_id', 'enable'], 'integer'],
             [['name'], 'string', 'max' => 40]

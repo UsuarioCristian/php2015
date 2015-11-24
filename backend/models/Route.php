@@ -30,6 +30,7 @@ class Route extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['employee_id'], 'required'],
             [['employee_id'], 'integer']
         ];
     }

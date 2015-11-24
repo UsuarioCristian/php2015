@@ -5,24 +5,24 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "order".
+ * This is the model class for table "commerce_product".
  *
- * @property integer $id
- * @property integer $quantity
  * @property integer $commerce_id
  * @property integer $product_id
+ * @property integer $stock
+ * @property integer $sold
  *
  * @property Product $product
  * @property Commerce $commerce
  */
-class Order extends \yii\db\ActiveRecord
+class CommerceProduct extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'order';
+        return 'commerce_product';
     }
 
     /**
@@ -31,8 +31,8 @@ class Order extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['quantity', 'commerce_id', 'product_id'], 'required'],
-            [['quantity', 'commerce_id', 'product_id'], 'integer']
+            [['commerce_id', 'product_id'], 'required'],
+            [['commerce_id', 'product_id', 'stock', 'sold'], 'integer']
         ];
     }
 
@@ -42,10 +42,10 @@ class Order extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'quantity' => Yii::t('app', 'Quantity'),
             'commerce_id' => Yii::t('app', 'Commerce ID'),
             'product_id' => Yii::t('app', 'Product ID'),
+            'stock' => Yii::t('app', 'Stock'),
+            'sold' => Yii::t('app', 'Sold'),
         ];
     }
 
@@ -67,10 +67,10 @@ class Order extends \yii\db\ActiveRecord
 
     /**
      * @inheritdoc
-     * @return OrderQuery the active query used by this AR class.
+     * @return CommerceProductQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new OrderQuery(get_called_class());
+        return new CommerceProductQuery(get_called_class());
     }
 }

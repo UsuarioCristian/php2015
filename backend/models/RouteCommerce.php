@@ -5,24 +5,23 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "order".
+ * This is the model class for table "route_commerce".
  *
- * @property integer $id
- * @property integer $quantity
+ * @property integer $route_id
  * @property integer $commerce_id
- * @property integer $product_id
+ * @property integer $position
  *
- * @property Product $product
+ * @property Route $route
  * @property Commerce $commerce
  */
-class Order extends \yii\db\ActiveRecord
+class RouteCommerce extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return 'order';
+        return 'route_commerce';
     }
 
     /**
@@ -31,8 +30,8 @@ class Order extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['quantity', 'commerce_id', 'product_id'], 'required'],
-            [['quantity', 'commerce_id', 'product_id'], 'integer']
+            [['route_id', 'commerce_id'], 'required'],
+            [['route_id', 'commerce_id', 'position'], 'integer']
         ];
     }
 
@@ -42,19 +41,18 @@ class Order extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'quantity' => Yii::t('app', 'Quantity'),
+            'route_id' => Yii::t('app', 'Route ID'),
             'commerce_id' => Yii::t('app', 'Commerce ID'),
-            'product_id' => Yii::t('app', 'Product ID'),
+            'position' => Yii::t('app', 'Position'),
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getProduct()
+    public function getRoute()
     {
-        return $this->hasOne(Product::className(), ['id' => 'product_id']);
+        return $this->hasOne(Route::className(), ['id' => 'route_id']);
     }
 
     /**
@@ -67,10 +65,10 @@ class Order extends \yii\db\ActiveRecord
 
     /**
      * @inheritdoc
-     * @return OrderQuery the active query used by this AR class.
+     * @return RouteCommerceQuery the active query used by this AR class.
      */
     public static function find()
     {
-        return new OrderQuery(get_called_class());
+        return new RouteCommerceQuery(get_called_class());
     }
 }
