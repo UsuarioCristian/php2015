@@ -18,7 +18,7 @@ class EmployeeSearch extends Employee
     public function rules()
     {
         return [
-            [['id', 'commerce_id', 'enable'], 'integer'],
+            [['id', 'enable'], 'integer'],
             [['name'], 'safe'],
             [['lat', 'long'], 'number'],
         ];
@@ -60,7 +60,6 @@ class EmployeeSearch extends Employee
             'id' => $this->id,
             'lat' => $this->lat,
             'long' => $this->long,
-            'commerce_id' => $this->commerce_id,
             'enable' => $this->enable,
         ]);
 

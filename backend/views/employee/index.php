@@ -29,8 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'lat',
             'long',
-            'commerce_id',
-            // 'enable',
+            'enable',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

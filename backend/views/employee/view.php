@@ -32,7 +32,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'lat',
             'long',
-            'commerce_id',
             'enable',
         ],
     ]) ?>

@@ -31,7 +31,7 @@ class m151124_012204_create_all_tables extends Migration
             'name' => $this->string(40)->notNull(),
             'lat' => $this->double(10),
             'long' => $this->double(10),
-            'commerce_id' => $this->integer(11)->notNull(),
+            //'commerce_id' => $this->integer(11)->notNull(),
             'enable' => $this->boolean()->notNull(),
         ]);
 
@@ -62,17 +62,25 @@ class m151124_012204_create_all_tables extends Migration
             'PRIMARY KEY(commerce_id, route_id)',            
         ]);
 
+        $this->createTable('commerce_employee', [                        
+            'commerce_id' => $this->integer(11),
+            'employee_id' => $this->integer(11),
+            'PRIMARY KEY(commerce_id, employee_id)',            
+        ]);
+
         $this->createIndex('inx-category_id','category','id');
         $this->addForeignKey('fk-category-product-category_id', 'product', 'category_id', 'category', 'id', 'RESTRICT','CASCADE');
 
         $this->createIndex('inx-commerce_id','commerce','id');
-        $this->addForeignKey('fk-commerce-employee-commerce_id', 'employee', 'commerce_id', 'commerce', 'id', 'RESTRICT','CASCADE');
+        //$this->addForeignKey('fk-commerce-employee-commerce_id', 'employee', 'commerce_id', 'commerce', 'id', 'RESTRICT','CASCADE');
         $this->addForeignKey('fk-commerce-oreder-commerce_id', 'order', 'commerce_id', 'commerce', 'id', 'RESTRICT','CASCADE');
         $this->addForeignKey('fk-commerce-commerce_product-commerce_id', 'commerce_product', 'commerce_id', 'commerce', 'id', 'RESTRICT','CASCADE');
         $this->addForeignKey('fk-commerce-route_commerce-commerce_id', 'route_commerce', 'commerce_id', 'commerce', 'id', 'RESTRICT','CASCADE');
+        $this->addForeignKey('fk-commerce-commerce_employee-commerce_id', 'commerce_employee', 'commerce_id', 'commerce', 'id', 'RESTRICT','CASCADE');
 
         $this->createIndex('inx-employee_id','employee','id');
         $this->addForeignKey('fk-employe-route-employee_id', 'route', 'employee_id', 'employee', 'id', 'RESTRICT','CASCADE');
+        $this->addForeignKey('fk-employe-commerce_employee-employee_id', 'commerce_employee', 'employee_id', 'employee', 'id', 'RESTRICT','CASCADE');
 
         $this->createIndex('inx-product_id','product','id');
         $this->addForeignKey('fk-product-order-product_id', 'order', 'product_id', 'product', 'id', 'RESTRICT','CASCADE');

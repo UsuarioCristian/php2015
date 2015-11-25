@@ -18,8 +18,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'long')->textInput() ?>
 
-    <?= $form->field($model, 'commerce_id')->textInput() ?>
-
     <?= $form->field($model, 'enable')->textInput() ?>
 
     <div class="form-group">

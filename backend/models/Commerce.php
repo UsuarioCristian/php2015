@@ -13,9 +13,10 @@ use Yii;
  * @property double $long
  * @property integer $priority
  *
+ * @property CommerceEmployee[] $commerceEmployees
+ * @property Employee[] $employees
  * @property CommerceProduct[] $commerceProducts
  * @property Product[] $products
- * @property Employee[] $employees
  * @property Order[] $orders
  * @property RouteCommerce[] $routeCommerces
  * @property Route[] $routes
@@ -60,6 +61,22 @@ class Commerce extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
+    public function getCommerceEmployees()
+    {
+        return $this->hasMany(CommerceEmployee::className(), ['commerce_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getEmployees()
+    {
+        return $this->hasMany(Employee::className(), ['id' => 'employee_id'])->viaTable('commerce_employee', ['commerce_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
     public function getCommerceProducts()
     {
         return $this->hasMany(CommerceProduct::className(), ['commerce_id' => 'id']);
@@ -71,14 +88,6 @@ class Commerce extends \yii\db\ActiveRecord
     public function getProducts()
     {
         return $this->hasMany(Product::className(), ['id' => 'product_id'])->viaTable('commerce_product', ['commerce_id' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getEmployees()
-    {
-        return $this->hasMany(Employee::className(), ['commerce_id' => 'id']);
     }
 
     /**

@@ -11,10 +11,10 @@ use Yii;
  * @property string $name
  * @property double $lat
  * @property double $long
- * @property integer $commerce_id
  * @property integer $enable
  *
- * @property Commerce $commerce
+ * @property CommerceEmployee[] $commerceEmployees
+ * @property Commerce[] $commerces
  * @property Route[] $routes
  */
 class Employee extends \yii\db\ActiveRecord
@@ -33,9 +33,9 @@ class Employee extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'commerce_id', 'enable'], 'required'],
+            [['name', 'enable'], 'required'],
             [['lat', 'long'], 'number'],
-            [['commerce_id', 'enable'], 'integer'],
+            [['enable'], 'integer'],
             [['name'], 'string', 'max' => 40]
         ];
     }
@@ -50,7 +50,6 @@ class Employee extends \yii\db\ActiveRecord
             'name' => Yii::t('app', 'Name'),
             'lat' => Yii::t('app', 'Lat'),
             'long' => Yii::t('app', 'Long'),
-            'commerce_id' => Yii::t('app', 'Commerce ID'),
             'enable' => Yii::t('app', 'Enable'),
         ];
     }
@@ -58,9 +57,17 @@ class Employee extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCommerce()
+    public function getCommerceEmployees()
     {
-        return $this->hasOne(Commerce::className(), ['id' => 'commerce_id']);
+        return $this->hasMany(CommerceEmployee::className(), ['employee_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCommerces()
+    {
+        return $this->hasMany(Commerce::className(), ['id' => 'commerce_id'])->viaTable('commerce_employee', ['employee_id' => 'id']);
     }
 
     /**

@@ -23,9 +23,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'long') ?>
 
-    <?= $form->field($model, 'commerce_id') ?>
-
-    <?php // echo $form->field($model, 'enable') ?>
+    <?= $form->field($model, 'enable') ?>
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
