@@ -9,6 +9,7 @@ use Yii;
  *
  * @property integer $id
  * @property integer $employee_id
+ * @property string $date
  *
  * @property Employee $employee
  * @property RouteCommerce[] $routeCommerces
@@ -31,7 +32,8 @@ class Route extends \yii\db\ActiveRecord
     {
         return [
             [['employee_id'], 'required'],
-            [['employee_id'], 'integer']
+            [['employee_id'], 'integer'],
+            [['date'], 'safe']
         ];
     }
 
@@ -43,6 +45,7 @@ class Route extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'employee_id' => Yii::t('app', 'Employee ID'),
+            'date' => Yii::t('app', 'Date'),
         ];
     }
 

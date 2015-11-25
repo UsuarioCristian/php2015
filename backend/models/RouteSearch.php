@@ -19,6 +19,7 @@ class RouteSearch extends Route
     {
         return [
             [['id', 'employee_id'], 'integer'],
+            [['date'], 'safe'],
         ];
     }
 
@@ -57,6 +58,7 @@ class RouteSearch extends Route
         $query->andFilterWhere([
             'id' => $this->id,
             'employee_id' => $this->employee_id,
+            'date' => $this->date,
         ]);
 
         return $dataProvider;

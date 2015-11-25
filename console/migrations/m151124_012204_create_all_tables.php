@@ -16,6 +16,7 @@ class m151124_012204_create_all_tables extends Migration
             'id' => $this->primaryKey(),            
             'name' => $this->string(40)->notNull(),
             'category_id' => $this->integer(11),
+            'image_path' => $this->string(40),
         ]);
 
         $this->createTable('commerce', [
@@ -23,7 +24,7 @@ class m151124_012204_create_all_tables extends Migration
             'name' => $this->string(40)->notNull(),
             'lat' => $this->double(10),
             'long' => $this->double(10),
-            'priority' => $this->integer(2),
+            'priority' => $this->boolean()->notNull(),
         ]);
 
         $this->createTable('employee', [
@@ -38,6 +39,7 @@ class m151124_012204_create_all_tables extends Migration
         $this->createTable('route', [
             'id' => $this->primaryKey(),            
             'employee_id' => $this->integer(11)->notNull(),
+            'date' => $this->date(),
         ]);
 
         $this->createTable('order', [

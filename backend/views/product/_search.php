@@ -21,6 +21,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'category_id') ?>
 
+    <?= $form->field($model, 'image_path') ?>
+
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
         <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default']) ?>

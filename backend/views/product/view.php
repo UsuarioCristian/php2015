@@ -31,6 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'name',
             'category_id',
+            'image_path',
         ],
     ]) ?>
 
