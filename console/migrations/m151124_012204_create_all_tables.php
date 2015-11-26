@@ -16,7 +16,7 @@ class m151124_012204_create_all_tables extends Migration
             'id' => $this->primaryKey(),            
             'name' => $this->string(40)->notNull(),
             'category_id' => $this->integer(11),
-            'image_path' => $this->string(40),
+            'image_path' => $this->string(200),
         ]);
 
         $this->createTable('commerce', [

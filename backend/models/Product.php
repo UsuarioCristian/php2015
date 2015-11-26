@@ -22,6 +22,9 @@ class Product extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+
+    public $file;
+
     public static function tableName()
     {
         return 'product';
@@ -35,7 +38,9 @@ class Product extends \yii\db\ActiveRecord
         return [
             [['name'], 'required'],
             [['category_id'], 'integer'],
-            [['name', 'image_path'], 'string', 'max' => 40]
+            [['name'], 'string', 'max' => 40],
+            [['image_path'], 'string', 'max' => 200],
+            [['file'], 'file'],
         ];
     }
 

@@ -32,6 +32,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'category_id',
             'image_path',
+            [
+                'attribute'=>'file',
+                'value'=>Yii::getAlias('@web').'/'.$model->image_path,
+                'format' => ['image',['width'=>'100','height'=>'100']],
+            ],
         ],
     ]) ?>
 
