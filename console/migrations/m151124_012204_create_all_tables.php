@@ -30,6 +30,7 @@ class m151124_012204_create_all_tables extends Migration
         $this->createTable('employee', [
             'id' => $this->primaryKey(),            
             'name' => $this->string(40)->notNull(),
+            'password' => $this->string(255)->notNull(),
             'lat' => $this->double(10),
             'long' => $this->double(10),
             //'commerce_id' => $this->integer(11)->notNull(),

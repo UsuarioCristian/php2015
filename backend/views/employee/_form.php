@@ -14,6 +14,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'password')->passwordInput(['maxlength' => true]) ?>
+
     <?= $form->field($model, 'lat')->textInput() ?>
 
     <?= $form->field($model, 'long')->textInput() ?>

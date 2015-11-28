@@ -19,11 +19,13 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'name') ?>
 
+    <?= $form->field($model, 'password') ?>
+
     <?= $form->field($model, 'lat') ?>
 
     <?= $form->field($model, 'long') ?>
 
-    <?= $form->field($model, 'enable') ?>
+    <?php // echo $form->field($model, 'enable') ?>
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>

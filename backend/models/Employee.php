@@ -9,6 +9,7 @@ use Yii;
  *
  * @property integer $id
  * @property string $name
+ * @property string $password
  * @property double $lat
  * @property double $long
  * @property integer $enable
@@ -33,10 +34,11 @@ class Employee extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'enable'], 'required'],
+            [['name', 'password', 'enable'], 'required'],
             [['lat', 'long'], 'number'],
             [['enable'], 'integer'],
-            [['name'], 'string', 'max' => 40]
+            [['name'], 'string', 'max' => 40],
+            [['password'], 'string', 'max' => 255]
         ];
     }
 
@@ -48,6 +50,7 @@ class Employee extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'name' => Yii::t('app', 'Name'),
+            'password' => Yii::t('app', 'Password'),
             'lat' => Yii::t('app', 'Lat'),
             'long' => Yii::t('app', 'Long'),
             'enable' => Yii::t('app', 'Enable'),
