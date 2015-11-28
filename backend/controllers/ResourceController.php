@@ -51,7 +51,7 @@ class ResourceController extends ActiveController
 
                 $jwt = JWT::encode($token, $key);
 
-                Yii::$app->response->content = $jwt;
+                Yii::$app->response->content = json_encode($jwt);
 
             }
         }
