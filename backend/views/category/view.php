@@ -33,4 +33,29 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]) ?>
 
+    <h3><?php echo "Productos" ?></h3>
+
+    <?php 
+        foreach ($model->getProducts()->all() as $key => $product) {
+    ?>
+        <div class="box-header with-border">
+            <h3 class="box-title"><?= Html::encode($product->name) ?></h3>
+        </div>
+
+         <?= DetailView::widget([
+            'model' => $product,
+            'attributes' => [
+                'id',
+                'name',
+                'image_path',
+                [
+                    'attribute'=>'file',
+                    'value'=>Yii::getAlias('@web').'/'.$product->image_path,
+                    'format' => ['image',['width'=>'100','height'=>'100']],
+                ],
+            ],
+        ]) ?>        
+
+    <?php } ?>
+
 </div>
