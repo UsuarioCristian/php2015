@@ -18,7 +18,7 @@ class RouteSearch extends Route
     public function rules()
     {
         return [
-            [['id', 'employee_id'], 'integer'],
+            [['id', 'employee_id', 'finished'], 'integer'],
             [['date'], 'safe'],
         ];
     }
@@ -59,6 +59,7 @@ class RouteSearch extends Route
             'id' => $this->id,
             'employee_id' => $this->employee_id,
             'date' => $this->date,
+            'finished' => $this->finished,
         ]);
 
         return $dataProvider;

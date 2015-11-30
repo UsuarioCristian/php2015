@@ -28,6 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'route_id',
             'commerce_id',
             'position',
+            'visited',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

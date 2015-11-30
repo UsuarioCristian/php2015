@@ -41,6 +41,7 @@ class m151124_012204_create_all_tables extends Migration
             'id' => $this->primaryKey(),            
             'employee_id' => $this->integer(11)->notNull(),
             'date' => $this->date(),
+            'finished' => $this->boolean()->notNull(),
         ]);
 
         $this->createTable('order', [
@@ -62,6 +63,7 @@ class m151124_012204_create_all_tables extends Migration
             'route_id' => $this->integer(11),
             'commerce_id' => $this->integer(11),
             'position' => $this->integer(4),
+            'visited' => $this->boolean()->notNull(),
             'PRIMARY KEY(commerce_id, route_id)',            
         ]);
 

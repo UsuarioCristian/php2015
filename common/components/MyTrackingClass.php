@@ -15,7 +15,7 @@ class MyTrackingClass extends \yii\base\Component{
 
         $path = Yii::$app->request->pathInfo;
 
-    	if($path === 'resource/stocks/save' || $path === 'resource/order/save'){
+    	if($path === 'resource/stocksave' || $path === 'resource/ordersave'){
     		
     		$headers = Yii::$app->request->headers;
     		$authorizationHeader = $headers->get('AUTHORIZATION');

@@ -10,6 +10,7 @@ use Yii;
  * @property integer $route_id
  * @property integer $commerce_id
  * @property integer $position
+ * @property integer $visited
  *
  * @property Route $route
  * @property Commerce $commerce
@@ -30,8 +31,8 @@ class RouteCommerce extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['route_id', 'commerce_id'], 'required'],
-            [['route_id', 'commerce_id', 'position'], 'integer']
+            [['route_id', 'commerce_id', 'visited'], 'required'],
+            [['route_id', 'commerce_id', 'position', 'visited'], 'integer']
         ];
     }
 
@@ -44,6 +45,7 @@ class RouteCommerce extends \yii\db\ActiveRecord
             'route_id' => Yii::t('app', 'Route ID'),
             'commerce_id' => Yii::t('app', 'Commerce ID'),
             'position' => Yii::t('app', 'Position'),
+            'visited' => Yii::t('app', 'Visited'),
         ];
     }
 

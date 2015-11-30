@@ -18,7 +18,7 @@ class RouteCommerceSearch extends RouteCommerce
     public function rules()
     {
         return [
-            [['route_id', 'commerce_id', 'position'], 'integer'],
+            [['route_id', 'commerce_id', 'position', 'visited'], 'integer'],
         ];
     }
 
@@ -58,6 +58,7 @@ class RouteCommerceSearch extends RouteCommerce
             'route_id' => $this->route_id,
             'commerce_id' => $this->commerce_id,
             'position' => $this->position,
+            'visited' => $this->visited,
         ]);
 
         return $dataProvider;
