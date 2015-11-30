@@ -6,6 +6,8 @@ angular.module('app', [
 	'app.services',
 	'angular-storage',
 	'angular-jwt',
+	'ngAnimate',
+	'ui.bootstrap'
 ])
 
 .config(['$urlRouterProvider', '$stateProvider','jwtInterceptorProvider','$httpProvider',function($urlRouterProvider, $stateProvider, jwtInterceptorProvider,$httpProvider) {
@@ -26,7 +28,7 @@ angular.module('app', [
 	})
 
 	jwtInterceptorProvider.tokenGetter = function(store){
-		return store.get('tokenConsultora');
+		return store.get('token');
 	};
 	
 	$httpProvider.interceptors.push('jwtInterceptor');

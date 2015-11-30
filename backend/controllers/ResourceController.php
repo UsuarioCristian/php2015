@@ -5,6 +5,9 @@ namespace backend\controllers;
 use Yii;
 use yii\rest\ActiveController;
 use app\models\Employee;
+use app\models\Commerce;
+use app\models\CommerceProduct;
+use app\models\Order;
 
 use \Firebase\JWT\JWT;
 
@@ -36,7 +39,7 @@ class ResourceController extends ActiveController
         ]);
 
         if ($employee === null) {
-            throw new \yii\web\HttpException(404, 'User not exist');
+            throw new \yii\web\HttpException(404, 'User not exist ');
         }else{
             if ($employee->password != Yii::$app->request->getBodyParam('password')) {
                 throw new \yii\web\HttpException(403, 'Incorrect password');
@@ -46,7 +49,8 @@ class ResourceController extends ActiveController
                 $key = "example_key";
                 $token = array(
                     "iat" => $time,
-                    "exp" => $time + 600
+                    "exp" => $time + 3000,
+                    "id" => $employee->id,
                 );
 
                 $jwt = JWT::encode($token, $key);
@@ -55,23 +59,71 @@ class ResourceController extends ActiveController
 
             }
         }
-
         
                
     }
 
-    public function actionAdd()
+    public function actionRoutesbyemployee()
     {
     	//$params = Yii::$app->request->post();
-    	$model = new Employee();
+        $userId = Yii::$app->request->getBodyParam('id');
+    	$employee = Employee::findOne($userId);
 
-        $model->name = Yii::$app->request->getBodyParam('name');        
-        $model->enable = Yii::$app->request->getBodyParam('enable');
-
-        $model->save();
+        if ($employee === null) {
+            throw new \yii\web\HttpException(404, 'User not found ');
+        }else{
+            $routes = $employee->getRoutes()->asArray()->all();
+            Yii::$app->response->content = json_encode($routes);
+        }
 
         //throw new \yii\web\HttpException(404, 'codigo = '.$codigo);
 
+    }
+
+    public function actionStocksave()
+    {
+        
+        $stock = Yii::$app->request->getBodyParam('stock');
+
+        $commerceProduct = CommerceProduct::findOne([
+            'commerce_id' => Yii::$app->request->getBodyParam('commerceId'),
+            'product_id' => Yii::$app->request->getBodyParam('productId'),
+        ]);
+
+        if ($commerceProduct === null) {
+            throw new \yii\web\HttpException(404, 'Data not found ');
+        }else{
+            $commerceProduct->stock = $stock;
+            $commerceProduct->save();
+        }
+    }
+
+    public function actionAllcommerce()
+    {
+        $allCommerce = Commerce::find()->asArray()->all();;
+        Yii::$app->response->content = json_encode($allCommerce);
+
+    }
+
+    public function actionAllproductbycommerce()
+    {
+        $commerceId = Yii::$app->request->getBodyParam('id');
+
+        $commerce = Commerce::findOne($commerceId);
+        $products = $commerce->getProducts()->asArray()->all();
+        Yii::$app->response->content = json_encode($products);
+
+    }
+
+    public function actionOrdersave()
+    {
+        
+        $model = new Order();
+        $model->commerce_id = Yii::$app->request->getBodyParam('commerceId');
+        $model->product_id = Yii::$app->request->getBodyParam('productId');
+        $model->quantity = Yii::$app->request->getBodyParam('quantity');
+
+        $model->save();
     }
 }
 

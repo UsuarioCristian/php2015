@@ -1,5 +1,6 @@
- <div class="container">
- 
+<div class="container">
+  <div class="row">
+    <div class="col-md-4"> 
       <form class="form-signin">
         <label for="inputName" class="sr-only">Email address</label>
         <input type="text" id="inputName" class="form-control" placeholder="Username" required autofocus ng-model="user.username">
@@ -10,7 +11,9 @@
             <input type="checkbox" value="remember-me"> Remember me
           </label>
         </div>
-        <button class="btn btn-lg btn-info btn-block" type="submit" ng-click="signin()" >Sign in</button>
+        <button class="btn btn-info btn-block" type="submit" ng-click="signin()" >Sign in</button>
       </form>
+    </div>
+  </div>  
 
-    </div> <!-- /container -->
+</div> <!-- /container -->

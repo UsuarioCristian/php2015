@@ -3,6 +3,10 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
+use yii\helpers\ArrayHelper;
+use app\models\Commerce;
+use app\models\Route;
+
 /* @var $this yii\web\View */
 /* @var $model app\models\RouteCommerce */
 /* @var $form yii\widgets\ActiveForm */
@@ -12,9 +16,16 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'route_id')->textInput() ?>
-
-    <?= $form->field($model, 'commerce_id')->textInput() ?>
+    
+    <?= $form->field($model, 'route_id')->dropDownList(
+    	ArrayHelper::map(Route::find()->all(), 'id', 'id'),
+    	['prompt'=>'Select Route_id']
+    ) ?>
+    
+    <?= $form->field($model, 'commerce_id')->dropDownList(
+    	ArrayHelper::map(Commerce::find()->all(), 'id', 'name'),
+    	['prompt'=>'Select Commerce']
+    ) ?>
 
     <?= $form->field($model, 'position')->textInput() ?>
 

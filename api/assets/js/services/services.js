@@ -71,3 +71,69 @@ value('version', '0.1')
 		}
 	}
 }])
+
+.factory('RouteFactory', ['$http','ApiEndpointFactory', function($http, ApiEndpointFactory) {
+	return{
+		getRoutes:function(userId){
+			var object = {
+				id : userId
+			}
+			$http.post(ApiEndpointFactory.ApiEndpoint +'/php2015/backend/web/resource/routesbyemployee', object)
+			.then(function(response){
+				console.log(response);
+				
+			}, function(response){
+				/*error*/
+			});
+		}
+	}
+}])
+
+.factory('CommerceFactory', ['$http','ApiEndpointFactory', function($http, ApiEndpointFactory) {
+	return{
+		getAllCommerce:function(){
+			
+			$http.post(ApiEndpointFactory.ApiEndpoint +'/php2015/backend/web/resource/allcommerce')
+			.then(function(response){
+				console.log(response);
+				return response.data;
+			}, function(response){
+				return null;
+			});
+		},
+
+		getAllProductBycommerce:function(commerceId){
+
+			var object = {
+				id : commerceId
+			}
+			$http.post(ApiEndpointFactory.ApiEndpoint +'/php2015/backend/web/resource/allproductbycommerce', object)
+			.then(function(response){
+				console.log(response);
+				return response.data;
+			}, function(response){
+				return null;
+			});
+		},
+
+		stockSave : function(object){
+			$http.post(ApiEndpointFactory.ApiEndpoint +'/php2015/backend/web/resource/stocksave', object)
+			.then(function(response){
+				console.log(response);
+				
+			}, function(response){
+				console.log(response);
+			});
+		},
+
+		orderSave : function(object){
+			$http.post(ApiEndpointFactory.ApiEndpoint +'/php2015/backend/web/resource/ordersave', object)
+			.then(function(response){
+				console.log(response);
+				
+			}, function(response){
+				console.log(response);
+			});
+		}
+	}
+}])
