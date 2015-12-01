@@ -15,46 +15,6 @@ value('version', '0.1')
 	
 }])
 
-.factory('CountryFactory', ['$http','ApiEndpointFactory', function($http, ApiEndpointFactory) {
-	var countries = [];
-	return{
-		getAllCountries:function(){
-			
-			$http.get(ApiEndpointFactory.ApiEndpoint +'/php2015/backend/web/resource/add')
-			.then(function(response){
-				console.log(response);
-				console.log('Ejecutado')
-			}, function(response){
-				/*error*/
-			});
-		},
-
-		getCountries:function(){
-			return countries;
-		},
-
-		crearPais:function(){
-
-			var employee = {
-				code: 'MX',
-				name: 'Mexico',
-				enable: 'true',
-				password: 'pass',
-			}
-
-
-			$http.post(ApiEndpointFactory.ApiEndpoint +'/php2015/backend/web/resource/login', employee)
-			.then(function(response){
-				console.log(response);
-				console.log('Ejecutado')
-			}, function(response){
-				/*error*/
-			});
-		},
-	}
-	
-}])
-
 .factory('LoginFactory', ['$http','ApiEndpointFactory', function($http, ApiEndpointFactory) {
 	return{
 		login:function(user){
@@ -90,29 +50,71 @@ value('version', '0.1')
 }])
 
 .factory('CommerceFactory', ['$http','ApiEndpointFactory', function($http, ApiEndpointFactory) {
-	return{
+	
+	var allCommerce = [];
+
+	return{		
 		getAllCommerce:function(){
 			
 			$http.post(ApiEndpointFactory.ApiEndpoint +'/php2015/backend/web/resource/allcommerce')
 			.then(function(response){
-				console.log(response);
+				
 				return response.data;
 			}, function(response){
 				return null;
 			});
 		},
 
-		getAllProductBycommerce:function(commerceId){
+		loadAllCommerce: function(){
+			var self = this;
+			$http.post(ApiEndpointFactory.ApiEndpoint +'/php2015/backend/web/resource/allcommerce')
+			.then(function(response){				
+				//allCommerce = response.data;
+				for (var i = 0; i < response.data.length; i++) {					
+					self.getAllProductBycommerce(response.data[i]);					
+				};
 
+			}, function(response){
+				allCommerce = null;
+			});
+		},
+
+		getLoadCommerce: function(){
+			return allCommerce;
+		},
+
+		getAllProductBycommerce:function(commerce){
+			var self = this;
 			var object = {
-				id : commerceId
+				id : commerce.id
 			}
 			$http.post(ApiEndpointFactory.ApiEndpoint +'/php2015/backend/web/resource/allproductbycommerce', object)
 			.then(function(response){
-				console.log(response);
-				return response.data;
+				var commerceCopy = {
+						id: commerce.id,
+						lat: commerce.lat,
+						long: commerce.long,
+						name: commerce.name,
+						priority: commerce.priority,
+						products: [],
+					}
+				var allProduct = response.data;
+
+				for (var i = 0; i < allProduct.length; i++) {
+					var producto = {
+						id : allProduct[i].id,
+						name : allProduct[i].name,
+						category_id : allProduct[i].category_id,
+						image_path : allProduct[i].image_path,
+						sold : 0,
+					}
+					self.getProductSold(commerceCopy.id, producto);
+					commerceCopy.products.push(producto);
+				};
+
+				allCommerce.push(commerceCopy);
 			}, function(response){
-				return null;
+				console.log('Error en getAllProductBycommerce');
 			});
 		},
 
@@ -131,6 +133,40 @@ value('version', '0.1')
 			.then(function(response){
 				console.log(response);
 				
+			}, function(response){
+				console.log(response);
+			});
+		},
+
+		getProductSold : function(idCommerce, product){
+
+			var object ={
+				commerceId : idCommerce,
+				productId : product.id
+			}
+
+			$http.post(ApiEndpointFactory.ApiEndpoint +'/php2015/backend/web/resource/productsold', object)
+			.then(function(response){
+				product.sold = response.data;				
+				
+			}, function(response){
+				console.log(response);
+			});
+		}
+	}
+}])
+
+.factory('ProductFactory', ['$http','ApiEndpointFactory', function($http, ApiEndpointFactory) {
+	var allProducts = [];
+	return{
+		getAllProduct:function(){
+			return allProducts;
+		},
+
+		loadAllProducts:function(){
+			$http.post(ApiEndpointFactory.ApiEndpoint +'/php2015/backend/web/resource/allproduct')
+			.then(function(response){				
+				allProducts = response.data;
 			}, function(response){
 				console.log(response);
 			});

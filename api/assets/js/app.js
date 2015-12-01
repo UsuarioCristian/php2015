@@ -27,6 +27,21 @@ angular.module('app', [
 		data:{requiresLogin:true}
 	})
 
+	$stateProvider.state('graficas', {
+		url: '/graficas',
+		templateUrl: 'views/graficas.html',
+		controller: 'GraficasController',
+		data:{requiresLogin:true},
+		resolve:{
+			load: function(CommerceFactory){
+				return CommerceFactory.loadAllCommerce();
+			},
+			loadProducts: function(ProductFactory){
+				return ProductFactory.loadAllProducts();
+			}
+		}
+	})
+
 	jwtInterceptorProvider.tokenGetter = function(store){
 		return store.get('token');
 	};

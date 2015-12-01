@@ -8,6 +8,7 @@ use app\models\Employee;
 use app\models\Commerce;
 use app\models\CommerceProduct;
 use app\models\Order;
+use app\models\Product;
 
 use \Firebase\JWT\JWT;
 
@@ -124,6 +125,25 @@ class ResourceController extends ActiveController
         $model->quantity = Yii::$app->request->getBodyParam('quantity');
 
         $model->save();
+    }
+
+
+    public function actionProductsold(){
+        $commerceProduct = CommerceProduct::findOne([
+            'commerce_id' => Yii::$app->request->getBodyParam('commerceId'),
+            'product_id' => Yii::$app->request->getBodyParam('productId'),
+        ]);
+
+        if ($commerceProduct === null) {
+            throw new \yii\web\HttpException(404, 'commerceProduct not found ');
+        }else{
+            return json_encode($commerceProduct->sold);
+        }
+    }
+
+    public function actionAllproduct(){
+        $allProduct = Product::find()->asArray()->all();;
+        Yii::$app->response->content = json_encode($allProduct);
     }
 }
 
