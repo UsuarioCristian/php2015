@@ -9,6 +9,8 @@ use app\models\Commerce;
 use app\models\CommerceProduct;
 use app\models\Order;
 use app\models\Product;
+use app\models\Route;
+use app\models\RouteCommerce;
 
 use \Firebase\JWT\JWT;
 
@@ -52,6 +54,8 @@ class ResourceController extends ActiveController
                     "iat" => $time,
                     "exp" => $time + 3000,
                     "id" => $employee->id,
+                    "lat" => $employee->lat,
+                    "long" => $employee->long
                 );
 
                 $jwt = JWT::encode($token, $key);
@@ -142,8 +146,31 @@ class ResourceController extends ActiveController
     }
 
     public function actionAllproduct(){
-        $allProduct = Product::find()->asArray()->all();;
+        $allProduct = Product::find()->asArray()->all();
         Yii::$app->response->content = json_encode($allProduct);
+    }
+
+    public function actionCurrentroute(){
+
+        $date = date('Y-m-d');
+
+        $route = Route::find()
+            ->where(['date' => $date, 'employee_id' => Yii::$app->request->getBodyParam('employeeId')])
+            ->asArray()
+            ->one();
+
+        Yii::$app->response->content = json_encode($route);
+       
+    }
+
+    public function actionRoutecommercebyroute(){
+
+        $allRouteCommerce = RouteCommerce::find()
+            ->where(['route_id' => Yii::$app->request->getBodyParam('routeId')])
+            ->asArray()->all();
+
+            Yii::$app->response->content = json_encode($allRouteCommerce);
+
     }
 }
 

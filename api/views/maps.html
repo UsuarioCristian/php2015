@@ -1,0 +1,14 @@
+<div class="radio">
+  <label>
+    <input type="radio" name="optionsRadios" id="optionsRadios1" value="recorridoCompleto" ng-model="recorrido.tipo" checked>
+    Recorrido Completo
+  </label>
+</div>
+<div class="radio">
+  <label>
+    <input type="radio" name="optionsRadios" id="optionsRadios2" value="recorridoPrioridad" ng-model="recorrido.tipo">
+    Recorrido con prioridad
+  </label>
+</div>
+
+<button class="btn btn-primary btn-lg" ng-click="actualizarRecorrido()"> VERIFICAR</button>

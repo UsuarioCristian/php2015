@@ -45,6 +45,19 @@ value('version', '0.1')
 			}, function(response){
 				/*error*/
 			});
+		},
+
+		getCurrentRoute:function(userId){
+			var object = {
+				employeeId : userId
+			}
+			$http.post(ApiEndpointFactory.ApiEndpoint +'/php2015/backend/web/resource/currentroute', object)
+			.then(function(response){
+				console.log(response);
+				
+			}, function(response){
+				/*error*/
+			});
 		}
 	}
 }])

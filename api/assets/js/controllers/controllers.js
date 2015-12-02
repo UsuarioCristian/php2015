@@ -68,6 +68,14 @@ angular.module("app.controllers",[
 		CommerceFactory.orderSave(object);
 	}
 
+	$scope.getCurrentRoute = function(){
+		var token = store.get('token');
+		var tokenDecodificado = jwtHelper.decodeToken(token);
+		var userId = tokenDecodificado.id;
+
+		RouteFactory.getCurrentRoute(userId);
+	}
+
 
 }])
 
@@ -244,5 +252,42 @@ angular.module("app.controllers",[
 		}
 	}
 
+	
+}])
+
+.controller("MapsController", ['$scope', 'RouteFactory', '$state', 'store','CommerceFactory',function($scope, RouteFactory, $state, store, CommerceFactory){
+	
+	var token = store.get('token');
+	var tokenDecodificado = jwtHelper.decodeToken(token);
+	var userId = tokenDecodificado.id;
+	var coordeadasUser = {
+		lat : tokenDecodificado.lat,
+		long : tokenDecodificado.long
+	}
+
+	var allRouteCommerce = RouteFactory.getCurrentRoute(userId);
+
+	$scope.actualizarRecorrido = function(){
+		if(allRouteCommerce != null){
+			if($scope.recorrido.tipo === 'recorridoCompleto'){
+				var commerceOnTheRoute = [];
+				var allCommerce = CommerceFactory.getAllCommerce();
+				for (var i = 0; i < allCommerce.length; i++) {
+					for (var j = 0; j < allRouteCommerce.length; j++) {
+						if(allRouteCommerce[j].commerce_id === allCommerce[i].id){
+							commerceOnTheRoute.push(allCommerce[i]);							
+						}
+					};
+				};
+
+				var nextCommerce = getNextCommerce();
+
+
+			}else{
+
+			}
+		}
+		
+	}
 	
 }])

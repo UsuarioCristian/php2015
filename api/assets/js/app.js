@@ -42,6 +42,18 @@ angular.module('app', [
 		}
 	})
 
+	$stateProvider.state('maps', {
+		url: '/maps',
+		templateUrl: 'views/maps.html',
+		controller: 'MapsController',
+		data:{requiresLogin:true},
+		resolve:{
+			load: function(CommerceFactory){
+				return CommerceFactory.loadAllCommerce();
+			},			
+		}
+	})
+
 	jwtInterceptorProvider.tokenGetter = function(store){
 		return store.get('token');
 	};
