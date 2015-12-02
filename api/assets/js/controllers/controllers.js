@@ -23,6 +23,22 @@ angular.module("app.controllers",[
 	
 }])
 
+.controller('HeaderController', ['$scope', 'LoginFactory', '$state', 'store', function($scope, LoginFactory, $state, store){
+
+	$scope.mostrarHeader = function(){
+		if($state.current.name ==='home' || $state.current.name ==='graficas' || $state.current.name ==='maps')
+			return true;
+		else
+			return false;
+	}
+	
+	$scope.logout = function() {
+		store.remove('token');
+		$state.go('login');
+	}
+	
+}])
+
 .controller('HomeController', ['$scope','RouteFactory', 'store', 'jwtHelper', '$state','CommerceFactory',function($scope, RouteFactory, store, jwtHelper,$state,CommerceFactory){
 	
 
@@ -269,8 +285,7 @@ angular.module("app.controllers",[
 	
 
 	$scope.actualizarRecorrido = function(){
-		var allRouteCommerce = RouteFactory.getCurrentRoute();
-		console.log(allRouteCommerce);
+		var allRouteCommerce = RouteFactory.getCurrentRoute();		
 		if(allRouteCommerce != null){
 			
 			var commerceOnTheRoute = [];

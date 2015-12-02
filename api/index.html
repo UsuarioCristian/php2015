@@ -2,11 +2,17 @@
 <html ng-app="app">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- CSS -->
   <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
   <link rel="stylesheet" type="text/css" href="assets/css/ui-router-animate.css">
+  <link rel="stylesheet" type="text/css" href="assets/css/main.css">
 </head>
 <body>
+  <div ng-controller="HeaderController">
+    <div ng-include src="'views/layout/headerMenu.html'" ng-show="mostrarHeader()" ></div>
+    <div ng-include src="'views/layout/header.html'" ng-show="$state.current.name ==='login'" ></div>
+  </div>
 
 	<div ui-view style="height: 100%;"></div>
 
