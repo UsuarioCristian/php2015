@@ -255,23 +255,27 @@ angular.module("app.controllers",[
 	
 }])
 
-.controller("MapsController", ['$scope', 'RouteFactory', '$state', 'store','CommerceFactory',function($scope, RouteFactory, $state, store, CommerceFactory){
+.controller("MapsController", ['$scope', 'RouteFactory', '$state', 'store','CommerceFactory','jwtHelper',function($scope, RouteFactory, $state, store, CommerceFactory,jwtHelper){
 	
 	var token = store.get('token');
 	var tokenDecodificado = jwtHelper.decodeToken(token);
 	var userId = tokenDecodificado.id;
-	var coordeadasUser = {
+	var coord = {
 		lat : tokenDecodificado.lat,
 		long : tokenDecodificado.long
 	}
 
-	var allRouteCommerce = RouteFactory.getCurrentRoute(userId);
+	RouteFactory.loadCurrentRoute(userId);
+	
 
 	$scope.actualizarRecorrido = function(){
+		var allRouteCommerce = RouteFactory.getCurrentRoute();
+		console.log(allRouteCommerce);
 		if(allRouteCommerce != null){
-			if($scope.recorrido.tipo === 'recorridoCompleto'){
-				var commerceOnTheRoute = [];
-				var allCommerce = CommerceFactory.getAllCommerce();
+			
+			var commerceOnTheRoute = [];
+			var allCommerce = CommerceFactory.getLoadCommerce();
+			if($scope.recorrido.tipo === 'recorridoCompleto'){				
 				for (var i = 0; i < allCommerce.length; i++) {
 					for (var j = 0; j < allRouteCommerce.length; j++) {
 						if(allRouteCommerce[j].commerce_id === allCommerce[i].id){
@@ -279,15 +283,76 @@ angular.module("app.controllers",[
 						}
 					};
 				};
-
-				var nextCommerce = getNextCommerce();
-
-
-			}else{
-
+			}else{				
+				for (var i = 0; i < allCommerce.length; i++) {
+					for (var j = 0; j < allRouteCommerce.length; j++) {
+						if(allRouteCommerce[j].commerce_id === allCommerce[i].id && allCommerce[i].priority ==1){
+							commerceOnTheRoute.push(allCommerce[i]);							
+						}
+					};
+				};
 			}
+			var comerciosOrd = [];
+			setRecorridoFinal(comerciosOrd, commerceOnTheRoute, coord.lat, coord.long);
+			console.log(comerciosOrd);
+
+
 		}
 		
 	}
+
+	var setRecorridoFinal = function(comerciosOrd, commerceOnTheRoute, lat, long){
+		console.log('Entro');
+		if(commerceOnTheRoute.length != 0){
+			var comercio = commerceOnTheRoute[0];
+			var p1 = {
+				lat: lat,
+				lng: long
+			}			
+			
+			for (var i = 1; i < commerceOnTheRoute.length; i++) {
+				var p2 = {
+					lat: comercio.lat,
+					lng: comercio.long
+				}				
+				var p3 = {
+					lat : commerceOnTheRoute[i].lat,
+					lng : commerceOnTheRoute[i].long
+				}
+				var min = getDistance(p1,p2);
+				var nuevaDistancia = getDistance(p1, p3);
+				if(min > nuevaDistancia){
+					comercio = commerceOnTheRoute[i];
+				}
+			};
+
+			comerciosOrd.push(comercio);
+
+			var index = commerceOnTheRoute.indexOf(comercio);
+			if (index > -1) {
+			    commerceOnTheRoute.splice(index, 1);
+			}
+			
+			setRecorridoFinal(comerciosOrd,commerceOnTheRoute, comercio.lat, comercio.long)
+
+		}
+	}
+
+
+	var rad = function(x) {
+	  return x * Math.PI / 180;
+	};
+
+	var getDistance = function(p1, p2) {
+	  var R = 6378137; // Earth’s mean radius in meter
+	  var dLat = rad(p2.lat - p1.lat);
+	  var dLong = rad(p2.lng - p1.lng);
+	  var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+	    Math.cos(rad(p1.lat)) * Math.cos(rad(p2.lat)) *
+	    Math.sin(dLong / 2) * Math.sin(dLong / 2);
+	  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+	  var d = R * c;
+	  return d; // returns the distance in meter
+	};
 	
 }])

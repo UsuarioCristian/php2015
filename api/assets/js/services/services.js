@@ -33,7 +33,8 @@ value('version', '0.1')
 }])
 
 .factory('RouteFactory', ['$http','ApiEndpointFactory', function($http, ApiEndpointFactory) {
-	return{
+	var route = null;
+	return{		
 		getRoutes:function(userId){
 			var object = {
 				id : userId
@@ -47,16 +48,20 @@ value('version', '0.1')
 			});
 		},
 
-		getCurrentRoute:function(userId){
+		getCurrentRoute:function(){
+			return route;
+		},
+
+		loadCurrentRoute: function(userId){
 			var object = {
 				employeeId : userId
 			}
 			$http.post(ApiEndpointFactory.ApiEndpoint +'/php2015/backend/web/resource/currentroute', object)
-			.then(function(response){
-				console.log(response);
+			.then(function(response){				
+				route = response.data;
 				
 			}, function(response){
-				/*error*/
+				console.log('Error en getCurrentRoute')
 			});
 		}
 	}

@@ -156,21 +156,15 @@ class ResourceController extends ActiveController
 
         $route = Route::find()
             ->where(['date' => $date, 'employee_id' => Yii::$app->request->getBodyParam('employeeId')])
-            ->asArray()
             ->one();
 
-        Yii::$app->response->content = json_encode($route);
-       
-    }
-
-    public function actionRoutecommercebyroute(){
-
-        $allRouteCommerce = RouteCommerce::find()
-            ->where(['route_id' => Yii::$app->request->getBodyParam('routeId')])
+        if($route->finished == 0){
+            $allRouteCommerce = RouteCommerce::find()
+            ->where(['route_id' => $route->id])
             ->asArray()->all();
 
             Yii::$app->response->content = json_encode($allRouteCommerce);
-
+        }        
     }
 }
 
