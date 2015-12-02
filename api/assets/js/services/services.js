@@ -85,6 +85,7 @@ value('version', '0.1')
 
 		loadAllCommerce: function(){
 			var self = this;
+			allCommerce = [];
 			$http.post(ApiEndpointFactory.ApiEndpoint +'/php2015/backend/web/resource/allcommerce')
 			.then(function(response){				
 				//allCommerce = response.data;

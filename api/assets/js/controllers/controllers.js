@@ -26,7 +26,7 @@ angular.module("app.controllers",[
 .controller('HeaderController', ['$scope', 'LoginFactory', '$state', 'store', function($scope, LoginFactory, $state, store){
 
 	$scope.mostrarHeader = function(){
-		if($state.current.name ==='home' || $state.current.name ==='graficas' || $state.current.name ==='maps')
+		if($state.current.name ==='home' || $state.current.name ==='graficas' || $state.current.name ==='maps' || $state.current.name ==='stock')
 			return true;
 		else
 			return false;
@@ -95,9 +95,13 @@ angular.module("app.controllers",[
 
 }])
 
-.controller("GraficasController", ['$scope', 'CommerceFactory', '$state', 'store','ProductFactory',function($scope, CommerceFactory, $state, store, ProductFactory){
+.controller("GraficasController", ['$scope', 'CommerceFactory', '$state', 'store','ProductFactory','$timeout',function($scope, CommerceFactory, $state, store, ProductFactory,$timeout){
 	
+	$scope.allCommerce = CommerceFactory.getLoadCommerce();
+	$scope.allProducts = ProductFactory.getAllProduct();	
+
 	$scope.verificarProductos = function(){
+
 		$scope.allCommerce = CommerceFactory.getLoadCommerce(); //Si se quiere obtener fuera de la funcion usar $timeout
 		$scope.allProducts = ProductFactory.getAllProduct();
 		for (var i = 0; i < $scope.allCommerce.length; i++) {
@@ -369,5 +373,32 @@ angular.module("app.controllers",[
 	  var d = R * c;
 	  return d; // returns the distance in meter
 	};
+	
+}])
+
+
+.controller('StockController', ['$scope', 'CommerceFactory', '$state', 'store','$timeout', function($scope, CommerceFactory, $state, store,$timeout){
+
+	$scope.allCommerce = CommerceFactory.getLoadCommerce();
+	if($scope.allCommerce == null){
+		$timeout(function(){},1500).then(
+			function(){
+				$scope.allCommerce = CommerceFactory.getLoadCommerce();
+			}),
+			function(){} 
+	}
+
+	$scope.changeCommerce = function(){
+		console.log($scope.commerceSelected);
+	}
+
+	$scope.saveStock = function(){
+		var object = {
+			commerceId : $scope.commerceSelected.id,
+			productId : $scope.productSelected.id,
+			stock : $scope.cantidadStock
+		}
+		CommerceFactory.stockSave(object);
+	}
 	
 }])

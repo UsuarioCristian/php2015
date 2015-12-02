@@ -54,6 +54,18 @@ angular.module('app', [
 		}
 	})
 
+	.state('stock', {
+		url: '/stock',
+		templateUrl: 'views/stock.html',
+		controller: 'StockController',
+		data:{requiresLogin:true},
+		resolve:{
+			load: function(CommerceFactory){
+				return CommerceFactory.loadAllCommerce();
+			},			
+		}
+	})
+
 	jwtInterceptorProvider.tokenGetter = function(store){
 		return store.get('token');
 	};
