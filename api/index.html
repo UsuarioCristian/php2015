@@ -12,7 +12,7 @@
 <body>
   <div ng-controller="HeaderController">
     <div ng-include src="'views/layout/headerMenu.html'" ng-show="mostrarHeader()" ></div>
-    <div ng-include src="'views/layout/header.html'" ng-show="$state.current.name ==='login'" ></div>
+    <div ng-include src="'views/layout/header.html'" ng-show="current.name ==='login'" ></div>
   </div>
 
 	<div ui-view style="height: 100%;"></div>

@@ -24,12 +24,15 @@ angular.module("app.controllers",[
 }])
 
 .controller('HeaderController', ['$scope', 'LoginFactory', '$state', 'store', function($scope, LoginFactory, $state, store){
-
+	$scope.current = {name : ''};
 	$scope.mostrarHeader = function(){
-		if($state.current.name ==='home' || $state.current.name ==='graficas' || $state.current.name ==='maps' || $state.current.name ==='stock')
+		if($state.current.name ==='home' || $state.current.name ==='graficas' || $state.current.name ==='maps' || $state.current.name ==='stock'){
+			$scope.current.name = '';
 			return true;
-		else
+		}else{
+			$scope.current.name = 'login';
 			return false;
+		}
 	}
 	
 	$scope.logout = function() {
@@ -481,11 +484,6 @@ angular.module("app.controllers",[
 				}
 			});
 
-
-
-
-
-
 	}
 	
 }])
@@ -513,6 +511,32 @@ angular.module("app.controllers",[
 			stock : $scope.cantidadStock
 		}
 		CommerceFactory.stockSave(object);
+	}
+	
+}])
+
+.controller('OrderController', ['$scope', 'CommerceFactory', '$state', 'store','$timeout', function($scope, CommerceFactory, $state, store,$timeout){
+
+	$scope.allCommerce = CommerceFactory.getLoadCommerce();
+	if($scope.allCommerce == null){
+		$timeout(function(){},1500).then(
+			function(){
+				$scope.allCommerce = CommerceFactory.getLoadCommerce();
+			}),
+			function(){} 
+	}
+
+	$scope.changeCommerce = function(){
+		
+	}
+
+	$scope.saveOrder = function(){
+		var object = {
+			commerceId : $scope.commerceSelected.id,
+			productId : $scope.productSelected.id,
+			quantity : $scope.cantidadOrder
+		}
+		CommerceFactory.orderSave(object);
 	}
 	
 }])

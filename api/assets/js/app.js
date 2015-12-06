@@ -67,6 +67,18 @@ angular.module('app', [
 		}
 	})
 
+	.state('order', {
+		url: '/order',
+		templateUrl: 'views/order.html',
+		controller: 'OrderController',
+		data:{requiresLogin:true},
+		resolve:{
+			load: function(CommerceFactory){
+				return CommerceFactory.loadAllCommerce();
+			},			
+		}
+	})
+
 	jwtInterceptorProvider.tokenGetter = function(store){
 		return store.get('token');
 	};
