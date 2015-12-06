@@ -141,10 +141,10 @@ value('version', '0.1')
 		stockSave : function(object){
 			$http.post(ApiEndpointFactory.ApiEndpoint +'/php2015/backend/web/resource/stocksave', object)
 			.then(function(response){
-				console.log(response);
+				swal("Guardado!", "Se ha guardado correctamente el stock", "success");
 				
 			}, function(response){
-				console.log(response);
+				sweetAlert("Oops...", "Ocurrio un error en el servidor!", "error");
 			});
 		},
 

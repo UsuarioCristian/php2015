@@ -1,9 +1,9 @@
 
-<div class="container">
+
 	
-	<div class="row vertical-center">
+	<div style="margin-top: 5em">
 		
-		<div class="form-group col-xs-4 col-sm-4 col-md-4">
+		<div class="form-group col-xs-12 col-sm-12 col-md-4 col-lg-4">
 			<label for="tipoGrafica">Seleccionar un tipo de grafica</label>
 			<select class="form-control" ng-model="graficaSeleccionada" ng-change= "changeChart()" ng-options="grafica as grafica.nombre for grafica in tiposGraficas track by grafica.id">		  </select>
 			<div ng-hide="graficaSeleccionada.id == 2">
@@ -16,15 +16,15 @@
 			</div>
 		</div>
 
-		<div ng-show="graficaSeleccionada.id == 1" id="container" class="col-xs-6 col-sm-6 col-md-6" style="height:350px;"></div>
-		<div ng-show="graficaSeleccionada.id == 2" id="container2" class="col-xs-6 col-sm-6 col-md-6" style="height:350px;"></div>
+		<div ng-show="graficaSeleccionada.id == 1" id="container" class="col-xs-12 col-sm-12 col-md-8 col-lg-8" style="height:350px;"></div> 
+		<div ng-show="graficaSeleccionada.id == 2" id="container2" class="col-xs-12 col-sm-12 col-md-8 col-lg-8" style="height:350px;"></div>
 
 
 	</div>
 	
 
 
-</div>
+
 
 
 
