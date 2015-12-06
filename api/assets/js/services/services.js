@@ -61,7 +61,8 @@ value('version', '0.1')
 				route = response.data;
 				
 			}, function(response){
-				console.log('Error en getCurrentRoute')
+				console.log('Error en getCurrentRoute');
+				console.log(response);
 			});
 		}
 	}

@@ -158,12 +158,14 @@ class ResourceController extends ActiveController
             ->where(['date' => $date, 'employee_id' => Yii::$app->request->getBodyParam('employeeId')])
             ->one();
 
-        if($route->finished == 0){
+        if($route!= null && $route->finished == 0){
             $allRouteCommerce = RouteCommerce::find()
             ->where(['route_id' => $route->id])
             ->asArray()->all();
 
             Yii::$app->response->content = json_encode($allRouteCommerce);
+        }else{
+            throw new \yii\web\HttpException(404, 'route not found ');
         }        
     }
 }

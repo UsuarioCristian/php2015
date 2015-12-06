@@ -275,7 +275,7 @@ angular.module("app.controllers",[
 	
 }])
 
-.controller("MapsController", ['$scope', 'RouteFactory', '$state', 'store','CommerceFactory','jwtHelper',function($scope, RouteFactory, $state, store, CommerceFactory,jwtHelper){
+.controller("MapsController", ['$scope', 'RouteFactory', '$state', 'store','CommerceFactory','jwtHelper','uiGmapIsReady',function($scope, RouteFactory, $state, store, CommerceFactory,jwtHelper, uiGmapIsReady){
 	
 	var token = store.get('token');
 	var tokenDecodificado = jwtHelper.decodeToken(token);
@@ -285,16 +285,15 @@ angular.module("app.controllers",[
 		long : tokenDecodificado.long
 	}
 
-	RouteFactory.loadCurrentRoute(userId);
-	
+	RouteFactory.loadCurrentRoute(userId);	
 
-	$scope.actualizarRecorrido = function(){
+	var actualizarRecorrido = function(){
 		var allRouteCommerce = RouteFactory.getCurrentRoute();		
 		if(allRouteCommerce != null){
 			
 			var commerceOnTheRoute = [];
 			var allCommerce = CommerceFactory.getLoadCommerce();
-			if($scope.recorrido.tipo === 'recorridoCompleto'){				
+			if($scope.recorridoSelected.tipo === 'recorridoCompleto'){				
 				for (var i = 0; i < allCommerce.length; i++) {
 					for (var j = 0; j < allRouteCommerce.length; j++) {
 						if(allRouteCommerce[j].commerce_id === allCommerce[i].id){
@@ -315,13 +314,11 @@ angular.module("app.controllers",[
 			setRecorridoFinal(comerciosOrd, commerceOnTheRoute, coord.lat, coord.long);
 			console.log(comerciosOrd);
 
-
 		}
 		
 	}
 
-	var setRecorridoFinal = function(comerciosOrd, commerceOnTheRoute, lat, long){
-		console.log('Entro');
+	var setRecorridoFinal = function(comerciosOrd, commerceOnTheRoute, lat, long){		
 		if(commerceOnTheRoute.length != 0){
 			var comercio = commerceOnTheRoute[0];
 			var p1 = {
@@ -373,6 +370,66 @@ angular.module("app.controllers",[
 	  var d = R * c;
 	  return d; // returns the distance in meter
 	};
+
+
+	/*GOOGLE MAPS*/
+
+	$scope.recorridoTipos = [];
+	var recorridoAuto = {
+		id : 1,
+		tipo: 'Auto '
+	};
+	var recorridoCaminando = {
+		id : 2,
+		tipo: 'Caminando'
+	}
+	$scope.recorridoTipos.push(recorridoAuto);
+	$scope.recorridoTipos.push(recorridoCaminando);
+
+	$scope.map = { control : {}, center: { latitude: coord.lat, longitude: coord.long }, zoom: 13};
+	uiGmapIsReady.promise().then(function (map_instances) {
+    	var mapa = $scope.map.control.getGMap();    // get map object through $scope.map.control getGMap() function
+        //var map2 = map_instances[0].map;
+        var directionsService = new google.maps.DirectionsService();
+		var directionsDisplay = new google.maps.DirectionsRenderer({map: mapa,draggable: true});
+
+		var panel_ruta = document.getElementById('panel_ruta');		
+
+		var waypts = [];
+		waypts.push({
+	        location: new google.maps.LatLng(-34.876124, -56.152006),
+	        stopover: true
+	    });
+		waypts.push({
+	        location: new google.maps.LatLng(-34.884963, -56.157529),
+	        stopover: true
+	    });
+
+		var request = {
+				origin: new google.maps.LatLng(-34.896136, -56.170851), 
+				destination: new google.maps.LatLng(-34.839392, -56.031976),
+				travelMode: google.maps.TravelMode.WALKING, //google.maps.DirectionsTravelMode[modo_viaje],
+				unitSystem: google.maps.UnitSystem.METRIC,
+				provideRouteAlternatives: true,
+				waypoints: waypts,
+    			optimizeWaypoints: true,		
+			};		  		  
+
+			// Route the directions and pass the response to a function to create markers for each step.
+			directionsService.route(request, function(response, status) {
+				if (status == google.maps.DirectionsStatus.OK){					
+					directionsDisplay.setPanel(panel_ruta);
+					directionsDisplay.setDirections(response);					
+				}
+				else{
+					alert("No existen rutas entre ambos puntos");
+				}
+			});
+    });
+
+	$scope.changeRecorrido = function(){
+		actualizarRecorrido();
+	}
 	
 }])
 

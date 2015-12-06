@@ -7,7 +7,8 @@ angular.module('app', [
 	'angular-storage',
 	'angular-jwt',
 	'ngAnimate',
-	'ui.bootstrap'
+	'ui.bootstrap',
+	'uiGmapgoogle-maps'
 ])
 
 .config(['$urlRouterProvider', '$stateProvider','jwtInterceptorProvider','$httpProvider',function($urlRouterProvider, $stateProvider, jwtInterceptorProvider,$httpProvider) {
