@@ -26,7 +26,7 @@ angular.module("app.controllers",[
 .controller('HeaderController', ['$scope', 'LoginFactory', '$state', 'store', function($scope, LoginFactory, $state, store){
 	$scope.current = {name : ''};
 	$scope.mostrarHeader = function(){
-		if($state.current.name ==='home' || $state.current.name ==='graficas' || $state.current.name ==='maps' || $state.current.name ==='stock' || $state.current.name ==='order'){
+		if($state.current.name ==='home' || $state.current.name ==='graficas' || $state.current.name ==='maps' || $state.current.name ==='stock' || $state.current.name ==='order' || $state.current.name ==='finalize'){
 			$scope.current.name = '';
 			return true;
 		}else{
@@ -435,6 +435,7 @@ angular.module("app.controllers",[
 	var directionsDisplay;
 	$scope.changeRecorrido = function(){		
 		var comerciosOrd = actualizarRecorrido();
+		CommerceFactory.setComerciosOrd(comerciosOrd);// Para usarlo en el finalizeController
 		var origen = new google.maps.LatLng(coord.lat, coord.long); // coordenadas del usuario
 		var lastCommerce = comerciosOrd[comerciosOrd.length -1];
 		var destination = new google.maps.LatLng(lastCommerce.lat, lastCommerce.long);
@@ -486,25 +487,23 @@ angular.module("app.controllers",[
 			});
 
 	};
-	$timeout(function(){},1000).then(
+
+	if(CommerceFactory.getComerciosOrd().length == 0){
+		$timeout(function(){},1000).then(
 			function(){
 				$scope.changeRecorrido();//Se llama esta funcion para que se ejecute al entrar al state
 			}),
 			function(){};
+	}
+	
 	
 }])
 
 
 .controller('StockController', ['$scope', 'CommerceFactory', '$state', 'store','$timeout', function($scope, CommerceFactory, $state, store,$timeout){
 
-	$scope.allCommerce = CommerceFactory.getLoadCommerce();
-	if($scope.allCommerce == null){
-		$timeout(function(){},1500).then(
-			function(){
-				$scope.allCommerce = CommerceFactory.getLoadCommerce();
-			}),
-			function(){} 
-	}
+	$scope.allCommerce = CommerceFactory.getComerciosOrd();
+	
 
 	$scope.changeCommerce = function(){
 		console.log($scope.commerceSelected);
@@ -523,14 +522,14 @@ angular.module("app.controllers",[
 
 .controller('OrderController', ['$scope', 'CommerceFactory', '$state', 'store','$timeout', function($scope, CommerceFactory, $state, store,$timeout){
 
-	$scope.allCommerce = CommerceFactory.getLoadCommerce();
-	if($scope.allCommerce == null){
+	$scope.allCommerce = CommerceFactory.getComerciosOrd();
+	/*if($scope.allCommerce == null){
 		$timeout(function(){},1500).then(
 			function(){
 				$scope.allCommerce = CommerceFactory.getLoadCommerce();
 			}),
 			function(){} 
-	}
+	}*/
 
 	$scope.changeCommerce = function(){
 		
@@ -543,6 +542,48 @@ angular.module("app.controllers",[
 			quantity : $scope.cantidadOrder
 		}
 		CommerceFactory.orderSave(object);
+	}
+	
+}])
+
+.controller('FinalizeController', ['$scope', 'CommerceFactory', '$state', 'store','$timeout', 'RouteFactory','jwtHelper',function($scope, CommerceFactory, $state, store,$timeout,RouteFactory,jwtHelper){
+
+	var comerciosOrd = CommerceFactory.getComerciosOrd();
+	$scope.allCommerce = [];
+
+	var token = store.get('token');
+	var tokenDecodificado = jwtHelper.decodeToken(token);
+	var userId = tokenDecodificado.id;
+	RouteFactory.loadCurrentRoute(userId);
+
+	for (var i = 0; i < comerciosOrd.length; i++) {
+		var commerce = {
+			name: comerciosOrd[i].name,
+			id: comerciosOrd[i].id,
+			visited: false
+		}
+
+		$scope.allCommerce.push(commerce);			
+	};	
+	
+	$scope.finalizar = function(){
+		swal({
+		   	title: "Estas seguro?",
+		   	text: "Una vez finalizada una ruta no se podra volver a cargar",
+		   	type: "warning",
+		   	showCancelButton: true,   
+		   	confirmButtonColor: "#DD6B55",   
+		   	confirmButtonText: "Si, confirmar!",   
+		   	closeOnConfirm: false },
+		   	function(){
+		   		var allRouteCommerce = RouteFactory.getCurrentRoute();
+		   		for (var i = 0; i < $scope.allCommerce.length; i++) {
+		   			RouteFactory.finalizeRoute(userId, $scope.allCommerce[i]);
+		   		};
+		   		RouteFactory.finalizeRoute(userId, $scope.allCommerce);
+		   		swal("Finalizado!", "Se ha finalizado el recorrido", "success"); 
+		   		$state.go('home');
+		   	});
 	}
 	
 }])

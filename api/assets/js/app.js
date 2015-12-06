@@ -79,6 +79,13 @@ angular.module('app', [
 		}
 	})
 
+	.state('finalize', {
+		url: '/finalize',
+		templateUrl: 'views/finalize.html',
+		controller: 'FinalizeController',
+		data:{requiresLogin:true},
+	})
+
 	jwtInterceptorProvider.tokenGetter = function(store){
 		return store.get('token');
 	};

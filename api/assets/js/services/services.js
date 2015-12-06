@@ -64,6 +64,23 @@ value('version', '0.1')
 				console.log('Error en getCurrentRoute');
 				console.log(response);
 			});
+		},
+
+		finalizeRoute: function(idUser, comercio){
+			var object = {
+				employeeId : idUser,
+				commerceId : comercio.id,
+				visited : comercio.visited
+			}
+			
+			$http.post(ApiEndpointFactory.ApiEndpoint +'/php2015/backend/web/resource/finalizeroute', object)
+			.then(function(response){				
+				
+				
+			}, function(response){
+				console.log('Error en getCurrentRoute');
+				console.log(response);
+			});
 		}
 	}
 }])
@@ -71,8 +88,16 @@ value('version', '0.1')
 .factory('CommerceFactory', ['$http','ApiEndpointFactory', function($http, ApiEndpointFactory) {
 	
 	var allCommerce = [];
+	var comerciosOrd = [];
 
-	return{		
+	return{
+		getComerciosOrd: function(){
+			return comerciosOrd;
+		},
+		setComerciosOrd: function(comercios){
+			comerciosOrd = comercios;
+		},
+
 		getAllCommerce:function(){
 			
 			$http.post(ApiEndpointFactory.ApiEndpoint +'/php2015/backend/web/resource/allcommerce')
@@ -151,10 +176,10 @@ value('version', '0.1')
 		orderSave : function(object){
 			$http.post(ApiEndpointFactory.ApiEndpoint +'/php2015/backend/web/resource/ordersave', object)
 			.then(function(response){
-				console.log(response);
+				swal("Guardado!", "Se ha guardado correctamente el pedido", "success");
 				
 			}, function(response){
-				console.log(response);
+				sweetAlert("Oops...", "Ocurrio un error en el servidor!", "error");
 			});
 		},
 

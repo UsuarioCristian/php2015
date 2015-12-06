@@ -168,5 +168,33 @@ class ResourceController extends ActiveController
             throw new \yii\web\HttpException(404, 'route not found ');
         }        
     }
+
+    public function actionFinalizeroute(){
+        
+        $date = date('Y-m-d');
+        $route = Route::find()
+            ->where(['date' => $date, 'employee_id' => Yii::$app->request->getBodyParam('employeeId')])
+            ->one();
+
+        $route->finished = 1;
+
+        $comercioId = Yii::$app->request->getBodyParam('commerceId');
+        $visited = Yii::$app->request->getBodyParam('visited');
+
+        if($visited == true){
+            $routeCommerce = RouteCommerce::findOne([
+                'route_id' => $route->id,
+                'commerce_id' => $comercioId
+            ]);
+
+            $routeCommerce->visited = 1;
+            $routeCommerce->save();
+        } 
+       
+
+        $route->save();
+
+
+    }
 }
 
