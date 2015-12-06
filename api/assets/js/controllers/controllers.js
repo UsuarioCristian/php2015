@@ -293,7 +293,7 @@ angular.module("app.controllers",[
 			
 			var commerceOnTheRoute = [];
 			var allCommerce = CommerceFactory.getLoadCommerce();
-			if($scope.recorridoSelected.tipo === 'recorridoCompleto'){				
+			if(!$scope.checkboxModel.value){				
 				for (var i = 0; i < allCommerce.length; i++) {
 					for (var j = 0; j < allRouteCommerce.length; j++) {
 						if(allRouteCommerce[j].commerce_id === allCommerce[i].id){
@@ -312,7 +312,7 @@ angular.module("app.controllers",[
 			}
 			var comerciosOrd = [];
 			setRecorridoFinal(comerciosOrd, commerceOnTheRoute, coord.lat, coord.long);
-			console.log(comerciosOrd);
+			return comerciosOrd;
 
 		}
 		
@@ -377,17 +377,19 @@ angular.module("app.controllers",[
 	$scope.recorridoTipos = [];
 	var recorridoAuto = {
 		id : 1,
-		tipo: 'Auto '
+		tipo: 'DRIVING ',
+		nombre: 'Auto'
 	};
 	var recorridoCaminando = {
 		id : 2,
-		tipo: 'Caminando'
+		tipo: 'WALKING',
+		nombre: 'Caminando'
 	}
 	$scope.recorridoTipos.push(recorridoAuto);
 	$scope.recorridoTipos.push(recorridoCaminando);
-
+	$scope.recorridoSelected = recorridoAuto;
 	$scope.map = { control : {}, center: { latitude: coord.lat, longitude: coord.long }, zoom: 13};
-	uiGmapIsReady.promise().then(function (map_instances) {
+	/*uiGmapIsReady.promise().then(function (map_instances) {
     	var mapa = $scope.map.control.getGMap();    // get map object through $scope.map.control getGMap() function
         //var map2 = map_instances[0].map;
         var directionsService = new google.maps.DirectionsService();
@@ -425,10 +427,65 @@ angular.module("app.controllers",[
 					alert("No existen rutas entre ambos puntos");
 				}
 			});
-    });
-
+    });*/
+	var directionsDisplay;
 	$scope.changeRecorrido = function(){
-		actualizarRecorrido();
+		var comerciosOrd = actualizarRecorrido();
+		var origen = new google.maps.LatLng(coord.lat, coord.long); // coordenadas del usuario
+		var lastCommerce = comerciosOrd[comerciosOrd.length -1];
+		var destination = new google.maps.LatLng(lastCommerce.lat, lastCommerce.long);
+		var travelMode;
+		if($scope.recorridoSelected.tipo == 'WALKING')
+			travelMode = google.maps.TravelMode.WALKING;
+		else
+			travelMode = google.maps.TravelMode.DRIVING;
+
+		var waypts = [];
+		for (var i = 0; i < comerciosOrd.length -1; i++) {
+			waypts.push({
+				location: new google.maps.LatLng(parseFloat(comerciosOrd[i].lat), parseFloat(comerciosOrd[i].long)),
+	        	stopover: true
+			})
+		};
+
+
+		var mapa = $scope.map.control.getGMap();    // get map object through $scope.map.control getGMap() function
+        //var map2 = map_instances[0].map;
+        var directionsService = new google.maps.DirectionsService();
+        if(directionsDisplay){
+            directionsDisplay.setMap(null);
+            directionsDisplay.setPanel(null);
+        }
+		directionsDisplay = new google.maps.DirectionsRenderer({map: mapa,draggable: true});
+
+		var panel_ruta = document.getElementById('panel_ruta');
+
+		var request = {
+				origin: origen, 
+				destination: destination,
+				travelMode: travelMode,
+				unitSystem: google.maps.UnitSystem.METRIC,
+				provideRouteAlternatives: true,
+				waypoints: waypts,
+    			optimizeWaypoints: true,		
+			};		  		  
+
+			// Route the directions and pass the response to a function to create markers for each step.
+			directionsService.route(request, function(response, status) {
+				if (status == google.maps.DirectionsStatus.OK){					
+					directionsDisplay.setPanel(panel_ruta);
+					directionsDisplay.setDirections(response);					
+				}
+				else{
+					alert("No existen rutas entre ambos puntos");
+				}
+			});
+
+
+
+
+
+
 	}
 	
 }])
